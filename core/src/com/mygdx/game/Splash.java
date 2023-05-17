@@ -32,6 +32,7 @@ public class Splash implements Screen {
     private final float TIMESTEP = 1/60f;
     private final int VELOCITYITERATIONS = 8, POSITIONITERATIONS = 3;
     private Vector2 movement = new Vector2();
+    private Sprite ballSprite;
     @Override
     public void render (float delta) {
 
@@ -103,7 +104,7 @@ public class Splash implements Screen {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.DynamicBody;
         bodyDef.position.set(0,4);
-
+        // ballSprite = new Sprite(new Texture());
         CircleShape shape = new CircleShape();
         shape.setRadius(.25f);
         FixtureDef fixtureDef = new FixtureDef();
