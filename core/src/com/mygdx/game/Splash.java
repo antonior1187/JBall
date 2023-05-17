@@ -86,7 +86,9 @@ public class Splash implements Screen {
             public boolean keyUp(int keycode){
                 switch (keycode) {
                     case Input.Keys.W:
+                        movement.x = 0;
                     case Input.Keys.A:
+                        movement.y = 0;
                     case Input.Keys.S:
                         movement.y = 0;
                         break;
