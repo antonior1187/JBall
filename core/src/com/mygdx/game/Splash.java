@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -20,6 +21,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
 
 public class Splash implements Screen {
     private SpriteBatch batch;
@@ -33,6 +37,7 @@ public class Splash implements Screen {
     private final int VELOCITYITERATIONS = 8, POSITIONITERATIONS = 3;
     private Vector2 movement = new Vector2();
     private Sprite ballSprite;
+    private Array<Body> tmpBodies = new Array<Body>();
     @Override
     public void render (float delta) {
 
@@ -40,6 +45,16 @@ public class Splash implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         splash.draw(batch);
+        batch.setProjectionMatrix(camera.combined);
+        world.getBodies(tmpBodies);
+        for(Body body : tmpBodies)
+            if(body.getUserData() != null && body.getUserData() instanceof Sprite) {
+                Sprite sprite = (Sprite) body.getUserData();
+                sprite.setPosition(body.getPosition().x-sprite.getWidth()/2, body.getPosition().y-sprite.getHeight()/2);
+                sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+                sprite.draw(batch);
+            }
+
         batch.end();
 
         world.step(TIMESTEP,VELOCITYITERATIONS,POSITIONITERATIONS);
@@ -104,7 +119,9 @@ public class Splash implements Screen {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.DynamicBody;
         bodyDef.position.set(0,4);
-        // ballSprite = new Sprite(new Texture());
+        ballSprite = new Sprite(new Texture("Sball.png"));
+        ballSprite.setSize(1f,1f);
+        ballSprite.setOrigin(ballSprite.getWidth()/2,ballSprite.getHeight()/2);
         CircleShape shape = new CircleShape();
         shape.setRadius(.25f);
         FixtureDef fixtureDef = new FixtureDef();
@@ -115,6 +132,7 @@ public class Splash implements Screen {
 
         Cm = world.createBody(bodyDef);
         Cm.createFixture(fixtureDef);
+        Cm.setUserData(ballSprite);
         shape.dispose();
 
         //Ground
@@ -122,7 +140,7 @@ public class Splash implements Screen {
         bodyDef.position.set(0,0);
 
         ChainShape groundShape = new ChainShape();
-        groundShape.createChain(new Vector2[]{new Vector2(-50,0), new Vector2(50,0)});
+        groundShape.createChain(new Vector2[]{new Vector2(-1,0), new Vector2(100,0)});
 
         // Fixture
         fixtureDef.shape = groundShape;
@@ -153,7 +171,7 @@ public class Splash implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        camera.viewportWidth = width /25;
+        camera.viewportWidth = width/25;
         camera.viewportHeight = height/25;
         camera.update();
     }
