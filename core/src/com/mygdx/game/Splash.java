@@ -2,6 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -38,13 +40,13 @@ public class Splash implements Screen {
     private Vector2 movement = new Vector2();
     private Sprite ballSprite;
     private Array<Body> tmpBodies = new Array<Body>();
+    private Player player;
     @Override
     public void render (float delta) {
 
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        splash.draw(batch);
         batch.setProjectionMatrix(camera.combined);
         world.getBodies(tmpBodies);
         for(Body body : tmpBodies)
@@ -58,12 +60,12 @@ public class Splash implements Screen {
         batch.end();
 
         world.step(TIMESTEP,VELOCITYITERATIONS,POSITIONITERATIONS);
-        Cm.applyForceToCenter(movement,true);
-
-        camera.position.set(Cm.getPosition().x,Cm.getPosition().y,0);
+        player.update();
+        camera.position.set(player.getBody().getPosition().x,player.getBody().getPosition().y,0);
         camera.update();
 
         debugRenderer.render(world, camera.combined);
+
     }
 
     @Override
@@ -78,80 +80,29 @@ public class Splash implements Screen {
 
         camera = new OrthographicCamera();
 
-        Gdx.input.setInputProcessor(new InputController(){
-            @Override
-            public boolean keyDown(int keycode){
-                switch (keycode){
-                    case Input.Keys.W:
-                        movement.y = speed;
-                        break;
-                    case Input.Keys.A:
-                        movement.x = -speed;
-                        break;
-                    case Input.Keys.S:
-                        movement.y = -speed;
-                        break;
-                    case Input.Keys.D:
-                        movement.x = speed;
+        player = new Player(world,0,5);
 
-                }
-                return true;
-
-            }
-            @Override
-            public boolean keyUp(int keycode){
-                switch (keycode) {
-                    case Input.Keys.W:
-                        movement.x = 0;
-                    case Input.Keys.A:
-                        movement.y = 0;
-                    case Input.Keys.S:
-                        movement.y = 0;
-                        break;
-                    case Input.Keys.D:
-                        movement.x = 0;
-
-                }
-                return true;
-
-            }
-
-        });
-        // Ball
+        Gdx.input.setInputProcessor(new InputMultiplexer(new InputAdapter(){
+        },player));
+        // Ground
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.DynamicBody;
-        bodyDef.position.set(0,4);
-        ballSprite = new Sprite(new Texture("Sball.png"));
-        ballSprite.setSize(1f,1f);
-        ballSprite.setOrigin(ballSprite.getWidth()/2,ballSprite.getHeight()/2);
-        CircleShape shape = new CircleShape();
-        shape.setRadius(.25f);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.density = 2.5f;
-        fixtureDef.friction = .25f;
-        fixtureDef.restitution = .8f;
-        fixtureDef.shape = shape;
-
-        Cm = world.createBody(bodyDef);
-        Cm.createFixture(fixtureDef);
-        Cm.setUserData(ballSprite);
-        shape.dispose();
-
-        //Ground
         bodyDef.type = BodyType.StaticBody;
         bodyDef.position.set(0,0);
 
         ChainShape groundShape = new ChainShape();
-        groundShape.createChain(new Vector2[]{new Vector2(-1,0), new Vector2(100,0)});
-
+        groundShape.createChain(new Vector2[]{new Vector2(-1,0), new Vector2(10,0)});
+        ChainShape groundShape1 = new ChainShape();
+        groundShape1.createChain(new Vector2[]{new Vector2(15,0), new Vector2(30,0)});
         // Fixture
+        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = groundShape;
         fixtureDef.friction =.5f;
         fixtureDef.restitution = 0;
-
         world.createBody(bodyDef).createFixture(fixtureDef);
-
+        fixtureDef.shape = groundShape1;
+        world.createBody(bodyDef).createFixture(fixtureDef);
         groundShape.dispose();
+        groundShape1.dispose();
 
         Texture splashTexture = new Texture("background.jpg");
         splash = new Sprite(splashTexture);
