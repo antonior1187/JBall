@@ -93,6 +93,24 @@ public class Splash implements Screen {
         groundShape.createChain(new Vector2[]{new Vector2(-1,0), new Vector2(10,0)});
         ChainShape groundShape1 = new ChainShape();
         groundShape1.createChain(new Vector2[]{new Vector2(15,0), new Vector2(30,0)});
+        ChainShape groundShape2 = new ChainShape();
+        groundShape2.createChain(new Vector2[]{new Vector2(40,0), new Vector2(55,0)});
+        ChainShape groundShape3 = new ChainShape();
+        groundShape3.createChain(new Vector2[]{new Vector2(65,0), new Vector2(80,0)});
+        ChainShape groundShape4 = new ChainShape();
+        groundShape4.createChain(new Vector2[]{new Vector2(85,3), new Vector2(95,3)});
+        ChainShape groundShape5 = new ChainShape();
+        groundShape5.createChain(new Vector2[]{new Vector2( 110,0), new Vector2(120,0)});
+        ChainShape groundShape6 = new ChainShape();
+        groundShape6.createChain(new Vector2[]{new Vector2(130,0), new Vector2(140,5)});
+        ChainShape groundShape7 = new ChainShape();
+        groundShape7.createChain(new Vector2[]{new Vector2(145,5), new Vector2(155,10)});
+        ChainShape groundShape8 = new ChainShape();
+        groundShape8.createChain(new Vector2[]{new Vector2(165,5), new Vector2(175,0)});
+        ChainShape groundShape9 = new ChainShape();
+        groundShape9.createChain(new Vector2[]{new Vector2(190,0), new Vector2(200,0)});
+
+
         // Fixture
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = groundShape;
@@ -101,8 +119,32 @@ public class Splash implements Screen {
         world.createBody(bodyDef).createFixture(fixtureDef);
         fixtureDef.shape = groundShape1;
         world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape2;
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape3;
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape4;
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape5;
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape6;
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape7;
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape8;
+        world.createBody(bodyDef).createFixture(fixtureDef);
+        fixtureDef.shape = groundShape9;
+        world.createBody(bodyDef).createFixture(fixtureDef);
         groundShape.dispose();
         groundShape1.dispose();
+        groundShape2.dispose();
+        groundShape3.dispose();
+        groundShape4.dispose();
+        groundShape5.dispose();
+        groundShape6.dispose();
+        groundShape7.dispose();
+        groundShape8.dispose();
+        groundShape9.dispose();
 
         Texture splashTexture = new Texture("background.jpg");
         splash = new Sprite(splashTexture);

@@ -4,7 +4,7 @@ import com.badlogic.gdx.*;
 
 public class JBall extends Game {
 
-	public static final String TITLE = "JBall", VERSION = "0.0.0.0.1";
+	public static final String TITLE = "JBall", VERSION = "0.0.0.0.2";
 
 	@Override
 	public void create() {
